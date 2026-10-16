@@ -1,4 +1,3 @@
-const MODEL = 'gemini-3.1-flash-lite';
 const $ = (selector) => document.querySelector(selector);
 const els = {
   text: $('#source-text'), files: $('#file-input'), fileList: $('#file-list'), drop: $('#drop-zone'),
@@ -6,6 +5,7 @@ const els = {
   result: $('#result-section'), resultContent: $('#result-content'), resultTitle: $('#result-title'),
   settings: $('#settings-dialog'), apiKey: $('#api-key'), settingsStatus: $('#settings-status'),
   custom: $('#custom-option'), countOption: $('#count-option'), languageOption: $('#language-option'),
+  modelSelect: $('#model-select'),
 };
 let selectedFiles = [];
 let currentMode = 'flashcards';
@@ -78,7 +78,7 @@ function extractResponse(payload) {
 }
 async function callGemini(key, prompt, media) {
   const parts = [{ text: prompt }, ...media];
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${els.modelSelect.value}:generateContent`, {
     method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
     body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: currentMode === 'flashcards' ? { responseMimeType: 'application/json', maxOutputTokens: 8192 } : { maxOutputTokens: 8192 } }),
   });
@@ -166,6 +166,7 @@ $('#copy-btn').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(text); $('#copy-btn').textContent = 'Copiato ✓'; setTimeout(() => { $('#copy-btn').textContent = 'Copia'; }, 1800); } catch { setStatus('Non riesco a copiare: il browser non ha dato accesso agli appunti.'); }
 });
 $('#download-btn').addEventListener('click', downloadResult);
+els.modelSelect.addEventListener('change', () => localStorage.setItem('studioai-gemini-model', els.modelSelect.value));
 window.addEventListener('online', () => { $('#offline-badge').hidden = true; });
 window.addEventListener('offline', () => { $('#offline-badge').hidden = false; });
 window.addEventListener('beforeinstallprompt', (event) => { event.preventDefault(); installPrompt = event; $('#install-btn').hidden = false; });
@@ -173,3 +174,5 @@ $('#install-btn').addEventListener('click', async () => { if (!installPrompt) re
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 if (!getKey()) setTimeout(() => { els.settings.showModal(); }, 450);
 updateCount(); updateMode('flashcards'); if (!navigator.onLine) $('#offline-badge').hidden = false;
+const savedModel = localStorage.getItem('studioai-gemini-model');
+if (savedModel && Array.from(els.modelSelect.options).some((option) => option.value === savedModel)) els.modelSelect.value = savedModel;
