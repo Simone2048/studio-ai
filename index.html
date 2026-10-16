@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f3ef"><meta name="description" content="Trasforma appunti in schemi, flashcard e riassunti con Gemini.">
+  <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="stylesheet" href="./styles.css">
+  <title>Studio AI — studia con chiarezza</title>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="#" aria-label="Studio AI home"><span class="brand-icon">s.</span><span>studio<span class="brand-light">ai</span></span></a><div class="top-actions"><span id="offline-badge" class="offline-badge" hidden>Offline</span><button id="install-btn" class="button button-quiet" hidden>Installa app</button><button id="settings-btn" class="avatar" aria-label="Impostazioni API">✳</button></div></header>
+  <main class="layout">
+    <section class="intro"><div class="eyebrow"><span class="sparkle">✳</span> IL TUO SPAZIO DI STUDIO</div><h1>Le idee prendono<br><em>forma.</em></h1><p>Parti dai tuoi appunti. Gemini ti aiuta a capire, organizzare e ricordare.</p></section>
+    <section class="workspace">
+      <div class="input-panel panel"><div class="panel-heading"><div><div class="step-label">01 <span>·</span> MATERIALE</div><h2>Da dove partiamo?</h2></div><span class="private-note">⌑ &nbsp;I tuoi appunti restano tuoi</span></div>
+        <div id="drop-zone" class="drop-zone"><input id="file-input" type="file" accept=".txt,.md,.csv,.json,image/*,audio/*,application/pdf" multiple hidden><button id="upload-btn" class="upload-button"><span class="upload-icon">↑</span><span><strong>Aggiungi file</strong><small>Immagini, audio, PDF o testo</small></span></button><span class="drop-hint">oppure trascinali qui</span><div id="file-list" class="file-list"></div></div>
+        <label class="sr-only" for="source-text">I tuoi appunti</label><textarea id="source-text" placeholder="Incolla qui i tuoi appunti, una lezione o il testo da studiare…"></textarea><div class="input-footer"><span id="char-count">0 caratteri</span><button id="clear-btn" class="text-button" type="button">Pulisci</button></div>
+      </div>
+      <div class="create-panel panel"><div class="panel-heading"><div><div class="step-label">02 <span>·</span> CREAZIONE</div><h2>Cosa vuoi ottenere?</h2></div></div>
+        <div class="mode-grid" role="group" aria-label="Tipo di contenuto">
+          <button class="mode-card selected" data-mode="flashcards"><span class="mode-icon">▤</span><span class="mode-title">Flashcard</span><span class="mode-desc">Impara un concetto alla volta</span><span class="radio-dot"></span></button>
+          <button class="mode-card" data-mode="outline"><span class="mode-icon">⌘</span><span class="mode-title">Schema</span><span class="mode-desc">Collega le idee principali</span><span class="radio-dot"></span></button>
+          <button class="mode-card" data-mode="summary"><span class="mode-icon">≡</span><span class="mode-title">Riassunto</span><span class="mode-desc">Cogli l’essenziale</span><span class="radio-dot"></span></button>
+          <button class="mode-card" data-mode="custom"><span class="mode-icon">✎</span><span class="mode-title">Testo su misura</span><span class="mode-desc">Scegli tu formato e tono</span><span class="radio-dot"></span></button>
+        </div>
+        <div id="options-row" class="options-row"><label id="count-option">Numero di carte<select id="card-count"><option>5</option><option selected>10</option><option>15</option><option>20</option><option>30</option></select></label><label id="language-option">Lingua<select id="language"><option value="Italiano" selected>Italiano</option><option value="English">English</option><option value="Español">Español</option><option value="Français">Français</option></select></label></div>
+        <label id="custom-option" class="custom-option" hidden for="custom-prompt">Come lo immagini?<input id="custom-prompt" type="text" placeholder="Es. una spiegazione semplice, tono discorsivo…" maxlength="300"></label>
+        <button id="generate-btn" class="button button-primary"><span>✳</span> <span id="generate-label">Crea le mie flashcard</span><span class="button-arrow">↗</span></button><div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+    <section id="result-section" class="result-section" hidden><div class="result-heading"><div><div class="step-label">03 <span>·</span> IL TUO MATERIALE</div><h2 id="result-title">Pronto per studiare</h2></div><div class="result-actions"><button id="copy-btn" class="button button-quiet">Copia</button><button id="download-btn" class="button button-quiet">Scarica</button></div></div><div id="result-content"></div></section>
+    <footer>Fatto per imparare, con calma. <span>La chiave API viene salvata solo su questo dispositivo.</span></footer>
+  </main>
+  <dialog id="settings-dialog"><form method="dialog" id="settings-form"><div class="dialog-top"><div><div class="step-label">IMPOSTAZIONI</div><h2>Collega Gemini</h2></div><button class="close-button" aria-label="Chiudi">×</button></div><p>Inserisci una Gemini API key per generare i contenuti. La chiave resta nel browser e viene inviata direttamente a Google quando usi l’app.</p><label class="custom-option" for="api-key">Gemini API key<input id="api-key" type="password" placeholder="AIza…" autocomplete="off"></label><label class="remember-key"><input type="checkbox" id="remember-key" checked> Ricorda su questo dispositivo</label><div id="settings-status" class="status" role="status"></div><div class="dialog-actions"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">Ottieni una chiave ↗</a><button id="save-key-btn" class="button button-primary" type="button">Salva chiave</button></div></form></dialog>
+  <script src="./app.js" defer></script>
+</body></html>
+
